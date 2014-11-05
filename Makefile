@@ -17,6 +17,7 @@ lib: ./Makefile ./lib.urp
 .cake3/tmp__lib_in: ./Makefile
 	-rm -rf .cake3/tmp__lib_in
 	echo '' >> .cake3/tmp__lib_in
+	echo '$$/list' >> .cake3/tmp__lib_in
 	echo './src/Prelude' >> .cake3/tmp__lib_in
 
 else
