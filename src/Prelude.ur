@@ -120,13 +120,7 @@ fun id [t ::: Type] (x:t) : t = x
 
 fun swap [a:::Type] [b:::Type] [c:::Type] (f:a->b->c) (y:b) (z:a) : c = f z y
 
-(* val show_pair [a] [b] [show a] [show b] : show (a*b) = mkShow (fn (a,b) => "("^(show a) ^ "," ^ (show b) ^ ")") *)
+val show_pair = fn [a ::: Type] [b ::: Type] (_ : show a) (_ : show b) => mkShow (fn ((x,y) : (a*b)) => "("^(show x) ^ "," ^ (show y) ^ ")")
 
-val show_int_string  : show (int*string) = mkShow (fn (a,b) => "("^(show a) ^ "," ^ (show b) ^ ")")
-val show_int_int  : show (int*int) = mkShow (fn (a,b) => "("^(show a) ^ "," ^ (show b) ^ ")")
-
-val show_opt_int_int  : show (option (int*int)) = mkShow (fn o =>
-  case o of
-    |Some (a,b) => "Some ("^(show a) ^ "," ^ (show b) ^ ")"
-    |None => "None")
+val show_option = fn [a ::: Type] (_ : show a) => mkShow (fn (o:option a) => case o of |Some x => "Some (" ^ (show x) ^ ")" | None => "None")
 
