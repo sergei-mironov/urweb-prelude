@@ -4,33 +4,30 @@ import Development.Cake3
 import Development.Cake3.Ext.UrWeb
 import Cake_Prelude_P
 
-thelib = uwlib (file "lib.urp") $ do
+lib = uwlib (file "lib.urp") $ do
   ur (sys "list")
-  ur (single (file "src/Prelude.ur"))
+  ur (file "src/Prelude.ur")
+
+test = uwapp "-dbms sqlite" (file "test/PreludeTest.urp") $ do
+  let src = file "test/PreludeTest.ur"
+  database ("dbname="++((takeBaseName src) .= "db"))
+  sql (src .= "sql")
+  library lib
+  ur (sys "option")
+  ur (sys "list")
+  ur src
   
 main = writeMake (file "Makefile") $ do
-
-  l <- thelib
-
-  let src = file "test/PreludeTest.ur"
-  t <- uwapp "-dbms sqlite" (file "PreludeTest.urp") $ do
-    database ("dbname="++((takeBaseName src) .= "db"))
-    sql (src .= "sql")
-    library l
-    ur (sys "option")
-    ur (sys "list")
-    ur (single src)
-
   rule $ do
     phony "lib"
-    depend l
+    depend lib
 
   rule $ do
     phony "test"
-    depend t
+    depend test
 
   rule $ do
     phony "all"
-    depend l
-    depend t
+    depend lib
+    depend test
 

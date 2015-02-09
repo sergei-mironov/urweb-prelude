@@ -9,35 +9,44 @@ unexport MAIN
 # Main section
 
 URVERSION = $(shell urweb -version)
-.PHONY: all
-all: ./Makefile ./PreludeTest.exe ./lib.urp ./test/PreludeTest.sql
-.PHONY: test
-test: ./Makefile ./PreludeTest.exe ./test/PreludeTest.sql
-.PHONY: lib
-lib: ./Makefile ./lib.urp
-./PreludeTest.exe: .fix-multy1
-./PreludeTest.urp: ./Makefile ./lib.urp ./test/PreludeTest.ur .cake3/tmp__PreludeTest_in
-	cat .cake3/tmp__PreludeTest_in > ./PreludeTest.urp
-.cake3/tmp__PreludeTest_in: ./Makefile
-	-rm -rf .cake3/tmp__PreludeTest_in
-	echo 'database dbname=PreludeTest.db' >> .cake3/tmp__PreludeTest_in
-	echo 'sql ./test/PreludeTest.sql' >> .cake3/tmp__PreludeTest_in
-	echo 'library .' >> .cake3/tmp__PreludeTest_in
-	echo '' >> .cake3/tmp__PreludeTest_in
-	echo '$$/option' >> .cake3/tmp__PreludeTest_in
-	echo '$$/list' >> .cake3/tmp__PreludeTest_in
-	echo './test/PreludeTest' >> .cake3/tmp__PreludeTest_in
-./lib.urp: ./Makefile ./src/Prelude.ur .cake3/tmp__lib_in
-	cat .cake3/tmp__lib_in > ./lib.urp
-.cake3/tmp__lib_in: ./Makefile
-	-rm -rf .cake3/tmp__lib_in
-	echo '' >> .cake3/tmp__lib_in
-	echo '$$/list' >> .cake3/tmp__lib_in
-	echo './src/Prelude' >> .cake3/tmp__lib_in
-./test/PreludeTest.sql: .fix-multy1
-.INTERMEDIATE: .fix-multy1
-.fix-multy1: ./Makefile ./PreludeTest.urp $(call GUARD,URVERSION)
-	urweb -dbms sqlite ./PreludeTest
+.PHONY: ./all
+./all: ./Makefile ./lib.urp ./test/PreludeTest.exe ./test/PreludeTest.sql
+./.cake3/tmp___test_PreludeTest_in_2: ./Makefile ./lib.urp ./test/PreludeTest.ur
+	( \
+	echo   ;\
+	echo $$\/option  ;\
+	echo $$\/list  ;\
+	echo \.\.\/test\/PreludeTest  ;\
+	) > ./.cake3/tmp___test_PreludeTest_in_2
+./.cake3/tmp___test_PreludeTest_in_1: ./Makefile ./lib.urp ./test/PreludeTest.ur
+	( \
+	echo database\ dbname\=PreludeTest\.db  ;\
+	echo sql\ \.\.\/test\/PreludeTest\.sql  ;\
+	echo library\ \.\.\/  ;\
+	) > ./.cake3/tmp___test_PreludeTest_in_1
+./.cake3/tmp___lib_in_2: ./Makefile ./src/Prelude.ur
+	( \
+	echo   ;\
+	echo $$\/list  ;\
+	echo \.\/src\/Prelude  ;\
+	) > ./.cake3/tmp___lib_in_2
+./.cake3/tmp___lib_in_1: ./Makefile ./src/Prelude.ur
+	echo -n > ./.cake3/tmp___lib_in_1
+.PHONY: ./test
+./test: ./Makefile ./test/PreludeTest.exe ./test/PreludeTest.sql
+.PHONY: ./lib
+./lib: ./Makefile ./lib.urp
+.INTERMEDIATE: ./.fix-multy1
+./.fix-multy1: ./Makefile ./test/PreludeTest.urp $(call GUARD,URVERSION)
+	urweb -dbms sqlite ./test/PreludeTest
+./lib.urp: ./Makefile ./.cake3/tmp___lib_in_1 ./.cake3/tmp___lib_in_2
+	cat ./.cake3/tmp___lib_in_1 > ./lib.urp
+	cat ./.cake3/tmp___lib_in_2 >> ./lib.urp
+./test/PreludeTest.exe: ./.fix-multy1
+./test/PreludeTest.sql: ./.fix-multy1
+./test/PreludeTest.urp: ./Makefile ./.cake3/tmp___test_PreludeTest_in_1 ./.cake3/tmp___test_PreludeTest_in_2
+	cat ./.cake3/tmp___test_PreludeTest_in_1 > ./test/PreludeTest.urp
+	cat ./.cake3/tmp___test_PreludeTest_in_2 >> ./test/PreludeTest.urp
 $(call GUARD,URVERSION):
 	rm -f .cake3/GUARD_URVERSION_*
 	touch $@
@@ -48,33 +57,37 @@ else
 
 ifneq ($(MAKECMDGOALS),clean)
 
-.PHONY: all
-all: .fix-multy1
-.PHONY: test
-test: .fix-multy1
-.PHONY: lib
-lib: .fix-multy1
-.PHONY: ./PreludeTest.exe
-./PreludeTest.exe: .fix-multy1
-.PHONY: ./PreludeTest.urp
-./PreludeTest.urp: .fix-multy1
-.PHONY: .cake3/tmp__PreludeTest_in
-.cake3/tmp__PreludeTest_in: .fix-multy1
-.PHONY: ./lib.urp
-./lib.urp: .fix-multy1
-.PHONY: .cake3/tmp__lib_in
-.cake3/tmp__lib_in: .fix-multy1
-.PHONY: ./test/PreludeTest.sql
-./test/PreludeTest.sql: .fix-multy1
-.INTERMEDIATE: .fix-multy1
-.fix-multy1: 
+.PHONY: ./all
+./all: ./.fix-multy1
+.PHONY: ./.cake3/tmp___test_PreludeTest_in_2
+./.cake3/tmp___test_PreludeTest_in_2: ./.fix-multy1
+.PHONY: ./.cake3/tmp___test_PreludeTest_in_1
+./.cake3/tmp___test_PreludeTest_in_1: ./.fix-multy1
+.PHONY: ./.cake3/tmp___lib_in_2
+./.cake3/tmp___lib_in_2: ./.fix-multy1
+.PHONY: ./.cake3/tmp___lib_in_1
+./.cake3/tmp___lib_in_1: ./.fix-multy1
+.PHONY: ./test
+./test: ./.fix-multy1
+.PHONY: ./lib
+./lib: ./.fix-multy1
+.INTERMEDIATE: ./.fix-multy1
+./.fix-multy1:
 	-mkdir .cake3
 	MAIN=1 $(MAKE) -f ./Makefile $(MAKECMDGOALS)
+.PHONY: ./lib.urp
+./lib.urp: ./.fix-multy1
+.PHONY: ./test/PreludeTest.exe
+./test/PreludeTest.exe: ./.fix-multy1
+.PHONY: ./test/PreludeTest.sql
+./test/PreludeTest.sql: ./.fix-multy1
+.PHONY: ./test/PreludeTest.urp
+./test/PreludeTest.urp: ./.fix-multy1
 
 endif
-.PHONY: clean
-clean: 
-	-rm ./PreludeTest.exe ./PreludeTest.urp ./lib.urp ./test/PreludeTest.sql .cake3/tmp__PreludeTest_in .cake3/tmp__lib_in
+.PHONY: ./clean
+./clean:
+	-rm ./.cake3/tmp___lib_in_1 ./.cake3/tmp___lib_in_2 ./.cake3/tmp___test_PreludeTest_in_1 ./.cake3/tmp___test_PreludeTest_in_2 ./lib.urp ./test/PreludeTest.exe ./test/PreludeTest.sql ./test/PreludeTest.urp
 	-rm -rf .cake3
 
 endif
