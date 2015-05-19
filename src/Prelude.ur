@@ -76,6 +76,27 @@ fun insert  [a ::: Type] [b ::: Type] (_:eq a) (x:a) (y:b) (l : list (a*b)) : li
 fun delete  [a ::: Type] [b ::: Type] (_:eq a) (x:a) (l : list (a*b)) : list (a*b) =
   dropBy (fn (x',_) => x' = x) l
 
+fun replicate [a ::: Type] (n:int) (x:a) : list a =
+  if n >=0 then case n of 0=> [] | n => x :: replicate (n-1) x
+           else error <xml>replicate: negative length</xml>
+
+fun zip_reverse [a:::Type] [b:::Type] (la:list a) (lb:list b) : list (a*b) =
+  (List.foldl (fn a (lb, res) => case lb of
+    |b :: lb => (lb, (a,b) :: res)
+    |[] => ([],res)) (lb,[]) la).2
+
+fun reverse [a:::Type] (la:list a) : list a =
+  List.rev la
+
+fun zip [a:::Type] [b:::Type] (la:list a) (lb:list b) : list (a*b) =
+  reverse (zip_reverse la lb)
+
+fun sequence_ (fst:int) (lst:int) : list int =
+  if (lst >= fst) then
+    fst :: sequence_ (fst+1) lst
+  else
+    []
+
 (*
 
  __  __                       _ 
