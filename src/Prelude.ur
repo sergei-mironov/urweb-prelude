@@ -107,6 +107,9 @@ fun sequence_ (fst:int) (lst:int) : list int =
                                 
 *)
 
+fun when [m:::Type->Type] (_:monad m) (b:bool) (ma:m {}) : m {} =
+  if(b) then ma else return {}
+
 fun ap [a:::Type] [b:::Type] [m:::Type->Type] (_:monad m) (f:a->b) (ma:m a) : m b =
   a <- ma;
   return (f a)
