@@ -131,6 +131,8 @@ fun foldlM_ [m ::: (Type -> Type)] (_ : monad m) [a ::: Type] [b ::: Type]
     _ <- List.foldlM f s l;
     return {}
 
+val foldlM = @@List.foldlM
+
 (*
 
  __  __ _          
