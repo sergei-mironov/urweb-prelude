@@ -16,7 +16,7 @@ test = uwapp "-dbms sqlite" (file "test/PreludeTest.urp") $ do
   ur (sys "option")
   ur (sys "list")
   ur src
-  
+
 main = writeMake (file "Makefile") $ do
   rule $ do
     phony "lib"
