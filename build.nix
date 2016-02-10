@@ -1,12 +1,14 @@
+{ libraries ? {} } :
+
 let
 
-uwb = import <urweb-build>;
+  uwb = import <urweb-build> libraries;
 
 in with uwb;
 
 rec {
 
-  lib = mkLib {
+  prelude = mkLib {
     name = "Prelude";
 
     statements = [
@@ -19,13 +21,17 @@ rec {
     mkExe {
       name = "PreludeTest";
       dbms = "sqlite";
+
+      libraries = {
+        inherit prelude;
+      };
+
       statements = [
-        (lib-local lib)
         (sys "option")
         (src1 ./test/PreludeTest.ur)
       ];
-     }
-   )];
+    }
+  )];
 
 }
 
