@@ -2,7 +2,7 @@
 
 let
 
-  uwb = import <urweb-build> libraries;
+  uwb = import <urweb-build> {inherit libraries; };
 
 in with uwb;
 
